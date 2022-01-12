@@ -3,6 +3,7 @@ defmodule Servy.Handler do
   @moduledoc "Handles HTTP requests"
 
   alias Servy.Conv
+  alias Servy.BearController
 
   @pages_path Path.expand("../../pages", __DIR__)
 
@@ -25,11 +26,16 @@ defmodule Servy.Handler do
   end
 
   def route(%Conv{ method: "GET", path: "/bears" } = conv) do
-    %{ conv | status: 200, resp_body: "Teddy, Smokey, Paddington" }
+    BearController.index(conv)
   end
 
   def route(%Conv{ method: "GET", path: "/bears" <> id } = conv) do
-    %{ conv | status: 200, resp_body: "Bear #{id}" }
+    params = Map.put(conv.params, "id", id)
+    BearController.show(conv, params)
+  end
+
+  def route(%Conv{ method: "POST", path: "/bears" } = conv) do
+    BearController.create(conv, conv.params)
   end
 
   def route(%Conv{ method: "GET", path: "/about" } = conv) do
@@ -64,6 +70,13 @@ defmodule Servy.Handler do
     #{conv.resp_body}
     """
   end
+
+  def loopy([head | tail]) do
+    IO.puts "Head: #{head} Tail: #{inspect(tail)}"
+    loopy(tail)
+  end
+
+  def loopy([]), do: IO.puts "Done!"
 end
 
 # request = """
@@ -240,3 +253,86 @@ response = Servy.Handler.handle(request)
 # => "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 330\n\n<h1>Clark's Wildthings Refuge</h1>\n\n<blockquote>\n  When we contemplate the whole globe as one great dewdrop,\n  striped and dotted with continents and isladns, flying through\n  space with other stars all singing and shining together as one,\n  the whole universe appears as an infinite storm of beauty.\n  -- John Muir\n</blockquote>\n\n"
 
 IO.puts response
+
+request = """
+POST /bears HTTP/1.1
+Host: example.com
+User-Agent: ExampleBrowser/1.0
+Accept: */*
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 21
+
+name=Baloo&type=Brown
+"""
+
+response = Servy.Handler.handle(request)
+
+IO.puts response
+
+# nums = [1, 2, 3, 4, 5]
+# => [1, 2, 3, 4, 5]
+# [a, b, c, d, e] = nums
+# => [1, 2, 3, 4, 5]
+# a
+# => 1
+# e
+# => 5
+# [head | tail] = nums
+# => [1, 2, 3, 4, 5]
+# head
+# => 1
+# tail
+# => [2, 3, 4, 5]
+# [head | tail] = tail
+# => [2, 3, 4, 5]
+# head
+# => 2
+# tail
+# => [3, 4, 5]
+# [head | tail] = tail
+# => [3, 4, 5]
+# head
+# => 3
+# tail
+# => [4, 5]
+# [head | tail] = tail
+# => [4, 5]
+# head
+# => 4
+# tail
+# => [5]
+# [head | tail] = tail
+# => [5]
+# head
+# => 5
+# tail
+# => []
+# [head | tail] = tail
+# => %MatchError{term: []}
+
+# URI.decode_query("name=Baloo&type=Brown")
+# => %{"name" => "Baloo", "type" => "Brown"}
+
+# Servy.Handler.loopy([1, 2, 3, 4, 5])
+# Head: 1 Tail: [2, 3, 4, 5]
+# Head: 2 Tail: [3, 4, 5]
+# Head: 3 Tail: [4, 5]
+# Head: 4 Tail: [5]
+# Head: 5 Tail: []
+# Done!
+
+# request = """
+# POST /bears HTTP/1.1
+# Host: example.com
+# User-Agent: ExampleBrowser/1.0
+# Accept: */*
+# Content-Type: multipart/form-data
+# Content-Length: 21
+
+# name=Baloo&type=Brown
+# """
+
+# response = Servy.Handler.handle(request)
+
+# IO.puts response
+
