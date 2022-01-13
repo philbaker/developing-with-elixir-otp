@@ -29,7 +29,7 @@ defmodule Servy.Handler do
     BearController.index(conv)
   end
 
-  def route(%Conv{ method: "GET", path: "/bears" <> id } = conv) do
+  def route(%Conv{ method: "GET", path: "/bears/" <> id } = conv) do
     params = Map.put(conv.params, "id", id)
     BearController.show(conv, params)
   end
@@ -155,16 +155,6 @@ end
 # => %{method: "GET", path: "/wildthings", resp_body: "Bears, Lions, Tigers"}
 
 # request = """
-# GET /bears HTTP/1.1
-# Host: example.com
-# User-Agent: ExampleBrowser/1.0
-# Accept: */*
-
-# """
-
-# response = Servy.Handler.handle(request)  # => nil
-
-# request = """
 # GET /bigfoot HTTP/1.1
 # Host: example.com
 # User-Agent: ExampleBrowser/1.0
@@ -174,16 +164,6 @@ end
 
 # response = Servy.Handler.handle(request)  # => nil
 
-
-# request = """
-# GET /bears/1 HTTP/1.1
-# Host: example.com
-# User-Agent: ExampleBrowser/1.0
-# Accept: */*
-
-# """
-
-# response = Servy.Handler.handle(request)  # => nil
 
 # Concatenate strings (binaries) with the less than greater than
 # operator
@@ -336,3 +316,47 @@ IO.puts response
 
 # IO.puts response
 
+# Enum.map([1, 2, 3], fn(x) -> x * 3 end)
+# => [3, 6, 9]
+
+# triple = fn(x) -> x * 3 end
+# => #Function<44.65746770/1 in :erl_eval.expr/5>
+# triple.(10)
+# => 30
+# Enum.map([1, 2, 3], triple)
+# => [3, 6, 9]
+
+request = """
+GET /bears HTTP/1.1
+Host: example.com
+User-Agent: ExampleBrowser/1.0
+Accept: */*
+
+"""
+
+response = Servy.Handler.handle(request)
+
+IO.puts response
+
+request = """
+GET /bears/1 HTTP/1.1
+Host: example.com
+User-Agent: ExampleBrowser/1.0
+Accept: */*
+
+"""
+
+response = Servy.Handler.handle(request)
+
+IO.puts response
+
+# phrases = ["lions", "tigers", "bears", "oh my"]
+# => ["lions", "tigers", "bears", "oh my"]
+# Enum.map(phrases, fn(x) -> String.upcase(x) end)
+# => ["LIONS", "TIGERS", "BEARS", "OH MY"]
+# Enum.map(phrases, &String.upcase(&1))
+# => ["LIONS", "TIGERS", "BEARS", "OH MY"]
+
+# list comprehension
+# for x <- [1, 2, 3], do: x * 3
+# => [3, 6, 9]
