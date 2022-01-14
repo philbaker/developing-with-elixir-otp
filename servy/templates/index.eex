@@ -1,7 +1,9 @@
 <h1>All the bears!</h1>
 
 <ul>
-  <li><%= bear.name %> - <%= bear.type %></li>
+  <%= for bear <- bears do %>
+    <li><%= bear.name %> - <%= bear.type %></li>
+  <% end %>
 </ul>
 
 <%= inspect(bears) %>
