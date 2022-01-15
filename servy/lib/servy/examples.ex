@@ -1,5 +1,5 @@
-defmodule Servy.Examples do
-end
+# defmodule Servy.Examples do
+# end
 
 # request = """
 # GET /wildthings HTTP/1.1
@@ -142,34 +142,35 @@ end
 # => {:error, :enoent}
 
 
-request = """
-GET /about HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
+# request = """
+# GET /about HTTP/1.1\r
+# Host: example.com\r
+# User-Agent: ExampleBrowser/1.0\r
+# Accept: */*
+# \r
+# """
 
-"""
-
-response = Servy.Handler.handle(request) 
+# response = Servy.Handler.handle(request) 
 # => %{method: "GET", path: "/about", resp_body: "", status: nil}
 # => "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 330\n\n<h1>Clark's Wildthings Refuge</h1>\n\n<blockquote>\n  When we contemplate the whole globe as one great dewdrop,\n  striped and dotted with continents and isladns, flying through\n  space with other stars all singing and shining together as one,\n  the whole universe appears as an infinite storm of beauty.\n  -- John Muir\n</blockquote>\n\n"
 
-IO.puts response
+# IO.puts response
 
-request = """
-POST /bears HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-Content-Type: application/x-www-form-urlencoded
-Content-Length: 21
+# request = """
+# POST /bears HTTP/1.1\r
+# Host: example.com\r
+# User-Agent: ExampleBrowser/1.0\r
+# Accept: */*\r
+# Content-Type: application/x-www-form-urlencoded\r
+# Content-Length: 21\r
+# \r
 
-name=Baloo&type=Brown
-"""
+# name=Baloo&type=Brown
+# """
 
-response = Servy.Handler.handle(request)
+# response = Servy.Handler.handle(request)
 
-IO.puts response
+# IO.puts response
 
 # nums = [1, 2, 3, 4, 5]
 # => [1, 2, 3, 4, 5]
@@ -248,29 +249,29 @@ IO.puts response
 # Enum.map([1, 2, 3], triple)
 # => [3, 6, 9]
 
-request = """
-GET /bears HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
+# request = """
+# GET /bears HTTP/1.1\r
+# Host: example.com\r
+# User-Agent: ExampleBrowser/1.0\r
+# Accept: */*\r
+# \r
+# """
 
-"""
+# response = Servy.Handler.handle(request)
 
-response = Servy.Handler.handle(request)
+# IO.puts response
 
-IO.puts response
+# request = """
+# GET /bears/1 HTTP/1.1\r
+# Host: example.com\r
+# User-Agent: ExampleBrowser/1.0\r
+# Accept: */*\r
+# \r
+# """
 
-request = """
-GET /bears/1 HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
+# response = Servy.Handler.handle(request)
 
-"""
-
-response = Servy.Handler.handle(request)
-
-IO.puts response
+# IO.puts response
 
 # phrases = ["lions", "tigers", "bears", "oh my"]
 # => ["lions", "tigers", "bears", "oh my"]
