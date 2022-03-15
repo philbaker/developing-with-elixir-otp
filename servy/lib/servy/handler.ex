@@ -4,6 +4,7 @@ defmodule Servy.Handler do
 
   alias Servy.Conv
   alias Servy.BearController
+  alias Servy.VideoCam
 
   @pages_path Path.expand("../../pages", __DIR__)
 
@@ -15,10 +16,35 @@ defmodule Servy.Handler do
     request
     |> parse
     |> rewrite_path
-    |> log
+    # |> log
     |> route
     |> track
     |> format_response
+  end
+
+  def route(%Conv{ method: "GET", path: "/snapshots" } = conv) do
+    parent = self() # the request-handling process
+
+    spawn(fn -> send(parent, {:result, VideoCam.get_snapshot("cam-1")}) end)
+    spawn(fn -> send(parent, {:result, VideoCam.get_snapshot("cam-2")}) end)
+    spawn(fn -> send(parent, {:result, VideoCam.get_snapshot("cam-3")}) end)
+
+    snapshot1 = receive do {:result, filename} -> filename end
+    snapshot2 = receive do {:result, filename} -> filename end
+    snapshot3 = receive do {:result, filename} -> filename end
+    snapshots = [snapshot1, snapshot2, snapshot3]
+
+    %{ conv | status: 200, resp_body: inspect snapshots}
+  end
+
+  def route(%Conv{ method: "GET", path: "/kaboom" } = _conv) do
+    raise "Kaboom!"
+  end
+
+  def route(%Conv{ method: "GET", path: "/hibernate/" <> time } = conv) do
+    time |> String.to_integer |> :timer.sleep
+
+    %{ conv | status: 200, resp_body: "Awake!" }
   end
 
   def route(%Conv{ method: "GET", path: "/wildthings" } = conv) do
@@ -82,3 +108,23 @@ defmodule Servy.Handler do
 
   def loopy([]), do: IO.puts "Done!"
 end
+
+# parent = self()
+
+# spawn(fn -> send(parent, {:result, "1-snapshot.jpg"}) end)
+
+# Process.info(parent, :messages)
+
+# receive do
+#   {:result, filename} -> filename
+# end
+
+# spawn(fn -> send(parent, {:result, "2-snapshot.jpg"}) end)
+# spawn(fn -> send(parent, {:result, "1-snapshot.jpg"}) end)
+# spawn(fn -> send(parent, {:result, "3-snapshot.jpg"}) end)
+
+# receive do {:result, filename} -> filename end
+
+# spawn(fn -> :timer.sleep(15000); send(parent, {:result, "3-snapshot.jpg"}) end)
+
+
