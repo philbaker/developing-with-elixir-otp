@@ -103,3 +103,11 @@ end
 
 # spawn(Servy.HttpServer, :start, [4000])
 
+
+# parent = self()
+
+# pid3 = spawn(fn -> send(parent, {self(), :result, "snapshot-1.jpg"}) end)
+
+# Process.info(parent, :messages)
+
+# receive do {^pid2, :result, coords} -> coords end
