@@ -1,10 +1,8 @@
 defmodule Servy.HttpServer do
-
   @doc """
   Starts the server on the given `port` of localhost.
   """
   def start(port) when is_integer(port) and port > 1023 do
-
     # Creates a socket to listen for client connections.
     # `listen_socket` is bound to the listening socket.
     {:ok, listen_socket} =
@@ -16,7 +14,7 @@ defmodule Servy.HttpServer do
     # `active: false` - receive data when we're ready by calling `:gen_tcp.recv/2`
     # `reuseaddr: true` - allows reusing the address if the listener crashes
 
-    IO.puts "\n🎧  Listening for connection requests on port #{port}...\n"
+    IO.puts("\n🎧  Listening for connection requests on port #{port}...\n")
 
     accept_loop(listen_socket)
   end
@@ -25,13 +23,13 @@ defmodule Servy.HttpServer do
   Accepts client connections on the `listen_socket`.
   """
   def accept_loop(listen_socket) do
-    IO.puts "⌛️  Waiting to accept a client connection...\n"
+    IO.puts("⌛️  Waiting to accept a client connection...\n")
 
     # Suspends (blocks) and waits for a client connection. When a connection
     # is accepted, `client_socket` is bound to a new client socket.
     {:ok, client_socket} = :gen_tcp.accept(listen_socket)
 
-    IO.puts "⚡️  Connection accepted!\n"
+    IO.puts("⚡️  Connection accepted!\n")
 
     # Receives the request and sends a response over the client socket.
     spawn(fn -> serve(client_socket) end)
@@ -45,10 +43,11 @@ defmodule Servy.HttpServer do
   sends a response back over the same socket.
   """
   def serve(client_socket) do
-    IO.puts "#{inspect self()}: working on it!"
+    IO.puts("#{inspect(self())}: working on it!")
+
     client_socket
     |> read_request
-    |> Servy.Handler.handle
+    |> Servy.Handler.handle()
     |> write_response(client_socket)
   end
 
@@ -56,10 +55,11 @@ defmodule Servy.HttpServer do
   Receives a request on the `client_socket`.
   """
   def read_request(client_socket) do
-    {:ok, request} = :gen_tcp.recv(client_socket, 0) # all available bytes
+    # all available bytes
+    {:ok, request} = :gen_tcp.recv(client_socket, 0)
 
-    IO.puts "➡️  Received request:\n"
-    IO.puts request
+    IO.puts("➡️  Received request:\n")
+    IO.puts(request)
 
     request
   end
@@ -83,14 +83,13 @@ defmodule Servy.HttpServer do
   def write_response(response, client_socket) do
     :ok = :gen_tcp.send(client_socket, response)
 
-    IO.puts "⬅️  Sent response:\n"
-    IO.puts response
+    IO.puts("⬅️  Sent response:\n")
+    IO.puts(response)
 
     # Closes the client socket, ending the connection.
     # Does not close the listen socket!
     :gen_tcp.close(client_socket)
   end
-
 end
 
 # pid = spawn(fn -> :timer.sleep(10000); IO.puts "Howdy!" end)
@@ -102,7 +101,6 @@ end
 #
 
 # spawn(Servy.HttpServer, :start, [4000])
-
 
 # parent = self()
 

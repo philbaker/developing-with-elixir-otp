@@ -1,5 +1,4 @@
 defmodule Servy.Parser do
-
   alias Servy.Conv
 
   def parse(request) do
@@ -17,7 +16,7 @@ defmodule Servy.Parser do
       method: method,
       path: path,
       params: params,
-      headers: headers,
+      headers: headers
     }
   end
 
@@ -41,7 +40,7 @@ defmodule Servy.Parser do
     %{}
   """
   def parse_params("application/x-www-form-urlencoded", params_string) do
-    params_string |> String.trim |> URI.decode_query
+    params_string |> String.trim() |> URI.decode_query()
   end
 
   def parse_params(_, _), do: %{}

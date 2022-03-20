@@ -18,7 +18,7 @@
 # first_line = List.first(lines)
 # => "GET /wildthings HTTP/1.1"
 # first_line = request |> String.split("\n") |> List.first
-  # => "GET /wildthings HTTP/1.1"
+# => "GET /wildthings HTTP/1.1"
 # parts = String.split(first_line, " ")
 # => ["GET", "/wildthings", "HTTP/1.1"]
 # [method, path, _] = String.split(first_line, " ")
@@ -86,7 +86,6 @@
 
 # response = Servy.Handler.handle(request)  # => nil
 
-
 # Concatenate strings (binaries) with the less than greater than
 # operator
 # "/bears/" <> "1"
@@ -140,7 +139,6 @@
 # => %MatchError{term: {:error, :enoent}}
 # { :error, reason } = File.read("pages/about-us.html")
 # => {:error, :enoent}
-
 
 # request = """
 # GET /about HTTP/1.1\r

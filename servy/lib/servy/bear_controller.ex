@@ -1,5 +1,4 @@
 defmodule Servy.BearController do
-
   alias Servy.Wildthings
   alias Servy.Bear
 
@@ -10,8 +9,8 @@ defmodule Servy.BearController do
       @templates_path
       |> Path.join(template)
       |> EEx.eval_file(bindings)
-    
-    %{ conv | status: 200, resp_body: content }
+
+    %{conv | status: 200, resp_body: content}
   end
 
   # Enum.map(phrases, &String.upcase(&1))
@@ -30,6 +29,6 @@ defmodule Servy.BearController do
   end
 
   def create(conv, %{"name" => name, "type" => type} = params) do
-    %{ conv | status: 201, resp_body: "Created a #{type} bear named #{name}" }
+    %{conv | status: 201, resp_body: "Created a #{type} bear named #{name}"}
   end
 end

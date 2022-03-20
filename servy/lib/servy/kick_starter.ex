@@ -2,7 +2,7 @@ defmodule Servy.KickStarter do
   use GenServer
 
   def start do
-    IO.puts "Starting the kickstarter..."
+    IO.puts("Starting the kickstarter...")
     GenServer.start(__MODULE__, :ok, name: __MODULE__)
   end
 
@@ -13,13 +13,13 @@ defmodule Servy.KickStarter do
   end
 
   def handle_info({:EXIT, _pid, reason}, _state) do
-    IO.puts "HttpServer exited (#{inspect reason})"
+    IO.puts("HttpServer exited (#{inspect(reason)})")
     server_pid = start_server()
     {:noreply, server_pid}
   end
 
   defp start_server do
-    IO.puts "Starting the HTTP server..."
+    IO.puts("Starting the HTTP server...")
     server_pid = spawn_link(Servy.HttpServer, :start, [4000])
     Process.register(server_pid, :http_server)
     server_pid
@@ -39,4 +39,3 @@ end
 # Process.info(kick_pid, :links)
 
 # Process.info(server_pid, :links)
-

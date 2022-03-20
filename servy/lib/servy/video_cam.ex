@@ -5,7 +5,7 @@ defmodule Servy.VideoCam do
   """
   def get_snapshot(camera_name) do
     # Code goes here to send a request to the external api
-    
+
     # Sleep for 1 second to simulate that the API can be slow
     :timer.sleep(1000)
 
